@@ -47,12 +47,21 @@ Resources:
       GroupDescription: Fargate Tasks Security Group
       VpcId: !Ref VpcId
 
-  TasksSecurityGroupIngressRule:
+  TasksSecurityGroupIngressRule1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref TasksSecurityGroup
       IpProtocol: -1
       CidrIp: 10.192.0.0/16
+
+  TasksSecurityGroupIngressRule2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      FromPort: "80"
+      ToPort: "80"
+      GroupId: !Ref TasksSecurityGroup
+      IpProtocol: tcp
+      CidrIp: 0.0.0.0/0
 
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
