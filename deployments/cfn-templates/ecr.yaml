@@ -30,3 +30,27 @@ Resources:
       RepositoryName: "adot-training/petclinic-ui"
       ImageScanningConfiguration: 
         ScanOnPush: true
+
+  CustomersServiceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: /ecs/CustomerService
+      RetentionInDays: 7
+
+  VisitsServiceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: /ecs/VisitsService
+      RetentionInDays: 7
+
+  VetsServiceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: /ecs/VetsService
+      RetentionInDays: 7
+
+  PetClinicUIeLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: /ecs/PetClinicUI
+      RetentionInDays: 7
