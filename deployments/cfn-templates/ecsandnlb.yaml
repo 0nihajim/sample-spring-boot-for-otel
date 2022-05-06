@@ -35,11 +35,11 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-          arn:aws:iam::aws:policy/service-role/CloudWatchAgentServerPolicy
-          arn:aws:iam::aws:policy/service-role/CloudWatchLogsFullAccess
-          arn:aws:iam::aws:policy/service-role/AWSXRayDaemonWriteAccess
-          arn:aws:iam::aws:policy/service-role/AmazonPrometheusRemoteWriteAccess
-          arn:aws:iam::aws:policy/service-role/AmazonSSMFullAccess
+        - arn:aws:iam::aws:policy/service-role/CloudWatchAgentServerPolicy
+        - arn:aws:iam::aws:policy/service-role/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSXRayDaemonWriteAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonPrometheusRemoteWriteAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMFullAccess
 
   TasksSecurityGroup:
     Type: AWS::EC2::SecurityGroup
