@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: ECS Cluster Resource
+Parameters:
+  VpcId:
+    Type: String
+  PublicSubnet1Id:
+    Type: String
+  PublicSubnet2Id:
+    Type: String
+    
+Resources:
+  ECSCluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: ADOT-Cluster
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Configuration:
+         ExecuteCommandConfiguration:
+            Logging: DEFAULT
+
+  EcsTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ADOT-task-execution-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+          arn:aws:iam::aws:policy/service-role/CloudWatchAgentServerPolicy
+          arn:aws:iam::aws:policy/service-role/CloudWatchLogsFullAccess
+          arn:aws:iam::aws:policy/service-role/AWSXRayDaemonWriteAccess
+          arn:aws:iam::aws:policy/service-role/AmazonPrometheusRemoteWriteAccess
+          arn:aws:iam::aws:policy/service-role/AmazonSSMFullAccess
+
+  TasksSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Fargate Tasks Security Group
+      VpcId: !Ref VpcId
+
+  TasksSecurityGroupIngressRule:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref TasksSecurityGroup
+      IpProtocol: -1
+      CidrIp: 10.192.0.0/16
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: ADOT-NLB
+      Subnets:
+        - !Ref PublicSubnet1Id
+        - !Ref PublicSubnet2Id
+      Scheme: internet-facing
+      Type: network
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: TCP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: ADOT-targetgroup
+      VpcId: !Ref VpcId
+      Port: 80
+      Protocol: TCP
+      TargetType: ip
