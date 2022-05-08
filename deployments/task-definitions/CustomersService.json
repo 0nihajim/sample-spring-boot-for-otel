@@ -1,0 +1,74 @@
+{
+    "family": "CustomersService", 
+    "networkMode": "awsvpc", 
+    "containerDefinitions": [
+        {
+            "name": "customers-service",
+            "image": "<アカウント ID>.dkr.ecr.ap-northeast-1.amazonaws.com/adot-training/customers-service:latest",
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "containerPort": 80
+                }
+            ],
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/CustomersService",
+                    "awslogs-region": "ap-northeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "environment": [
+                {
+                    "name": "AWS_REGION",
+                    "value": "ap-northeast-1"
+                },
+                {
+                    "name": "OTEL_METRICS_EXPORTER",
+                    "value": "none"
+                },
+                {
+                    "name": "OTEL_OTLP_ENDPOINT",
+                    "value": "localhost:4317"
+                },
+                {
+                    "name": "OTEL_RESOURCE_ATTRIBUTES",
+                    "value": "service.name=CustomersService,service.namespace=ObsPlat"
+                },
+                {
+                    "name": "PETCLINIC_DATABASE_URL",
+                    "value": "jdbc:mysql://<RDS DB インスタンスのエンドポイント>/customers_db"
+                },
+                {
+                    "name": "PETCLINIC_DATABASE_USERNAME",
+                    "value": "<ユーザー名>"
+                }
+            ],
+            "secrets": [
+                {
+                    "name": "PETCLINIC_DATABASE_PASSWORD",
+                    "valueFrom":  "/ADOT/RDSUserPassword"
+                 }
+            ],
+            "healthCheck": {
+                "retries": 5,
+                "command": [
+                    "CMD-SHELL",
+                    "curl -f http://localhost/customers-service/health || exit 1"
+                ],
+                "timeout": 5,
+                "interval": 30
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ], 
+    "taskRoleArn": "arn:aws:iam::<アカウント ID>:role/ADOT-task-execution-role",
+    "executionRoleArn": "arn:aws:iam::<アカウント ID>:role/ADOT-task-execution-role",
+    "cpu": "512", 
+    "memory": "1024"
+}

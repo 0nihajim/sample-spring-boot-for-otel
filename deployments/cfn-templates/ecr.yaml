@@ -34,7 +34,7 @@ Resources:
   CustomersServiceLogGroup:
     Type: AWS::Logs::LogGroup
     Properties: 
-      LogGroupName: /ecs/CustomerService
+      LogGroupName: /ecs/CustomersService
       RetentionInDays: 7
 
   VisitsServiceLogGroup:
