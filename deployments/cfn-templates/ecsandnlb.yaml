@@ -89,3 +89,7 @@ Resources:
       Port: 80
       Protocol: TCP
       TargetType: ip
+
+Outputs:
+  LoadBalancerDNS:
+    Value: !GetAtt LoadBalancer.DNSName
