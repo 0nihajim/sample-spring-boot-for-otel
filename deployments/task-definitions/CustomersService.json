@@ -4,7 +4,7 @@
     "containerDefinitions": [
         {
             "name": "customers-service",
-            "image": "<アカウント ID>.dkr.ecr.ap-northeast-1.amazonaws.com/adot-training/customers-service:latest",
+            "image": "<アカウント ID>.dkr.ecr.<AWS リージョン>.amazonaws.com/adot-training/customers-service:latest",
             "portMappings": [
                 {
                     "hostPort": 80,
@@ -17,14 +17,14 @@
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-group": "/ecs/CustomersService",
-                    "awslogs-region": "ap-northeast-1",
+                    "awslogs-region": "<AWS リージョン>",
                     "awslogs-stream-prefix": "ecs"
                 }
             },
             "environment": [
                 {
                     "name": "AWS_REGION",
-                    "value": "ap-northeast-1"
+                    "value": "<AWS リージョン>"
                 },
                 {
                     "name": "OTEL_METRICS_EXPORTER",
